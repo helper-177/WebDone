@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Профессиональная вёрстка сайтов под ключ. Адаптивность, стиль, скорость." />
+  <meta name="author" content="Лёха" />
+  <title>Вёрстка от Лёхи</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <span class="phone">📞 +7 (920) 697-77-66</span>
+    <h1>🚀 Вёрстка от Лёхи</h1>
+    
+  </header>
+  <nav>
+    <button id="menu-toggle">☰</button>
+    <ul class="menu">
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#portfolio">Портфолио</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+  </nav>
+  <main class="container">
+    <section id="about" class="section animate">
+      <h2>Почему именно я?</h2>
+      <p>Создаю быстрые, адаптивные и красивые сайты под ключ. Темная/светлая тема, анимации, микроразметка и всё по красоте.</p>
+    </section>
+    <section id="portfolio" class="section animate">
+      <h2>Портфолио</h2>
+      <p>Тут будут примеры работ.</p>
+    </section>
+    <section id="contact" class="section animate">
+      <h2>Связаться со мной</h2>
+      <form class="contact-form">
+        <input type="text" placeholder="Ваше имя" required />
+        <input type="email" placeholder="Ваш Email" required />
+        <textarea placeholder="Ваше сообщение" required></textarea>
+        <button type="submit">Отправить</button>
+      </form>
+    </section>
+  
+    <section class="grid-section animate">
+      <h2>Услуги</h2>
+      <div class="grid-cards">
+        <div class="card">Адаптивная вёрстка</div>
+        <div class="card">Интеграция с Telegram</div>
+        <div class="card">Сео-оптимизация</div>
+        <div class="card">Поддержка тем</div>
+        <div class="card">Микроразметка</div>
+        <div class="card">Быстрая загрузка</div>
+      </div>
+    </section>
+
+</main>
+
+  <div class="floating-buttons">
+    <button id="theme-toggle" class="pulse" title="Сменить тему">🌓</button>
+    <a href="tel:+79206977766" class="pulse call-btn" title="Позвонить">📞</a>
+  </div>
+
+</body>
+</html>
