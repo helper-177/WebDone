@@ -42,21 +42,21 @@ class RandomWheel {
                 return;
             }
             
-            this.showRandomWheel(extendedLakes, searchRadius * 2);
+            this.showFirstBanner(extendedLakes, searchRadius * 2);
         } else {
-            this.showRandomWheel(nearbyLakes, searchRadius);
+            this.showFirstBanner(nearbyLakes, searchRadius);
         }
     }
 
-    // Показ колеса выбора
-    showRandomWheel(lakes, radius) {
+    // Показ первого баннера с колесом прокрутки
+    showFirstBanner(lakes, radius) {
         this.isSpinning = true;
         const locationName = this.app.userLocation ? "вашего местоположения" : "Озёрного";
         
-        const modalHTML = `
-            <div class="random-modal" id="randomModal">
-                <div class="random-modal-content">
-                    <div class="random-header">
+        const bannerHTML = `
+            <div class="random-banner" id="firstBanner">
+                <div class="banner-content">
+                    <div class="banner-header">
                         <h3>🎣 Колесо рыбацкой судьбы</h3>
                         <p>Выбираем озеро в радиусе ${radius} км от ${locationName}</p>
                     </div>
@@ -80,96 +80,22 @@ class RandomWheel {
                         </div>
                     </div>
                     
-                    <div class="random-result hidden" id="randomResult">
-                        <div class="result-header">
-                            <i data-feather="award" class="result-icon"></i>
-                            <h4>Судьба выбрала!</h4>
-                        </div>
-                        <div id="selectedLakeInfo"></div>
-                        <p class="destiny-message" id="destinyMessage"></p>
-                    </div>
-                    
-                    <div class="random-actions">
-                        <button class="random-action-btn random-cancel" id="cancelRandom">
-                            <i data-feather="x"></i>
-                            Отмена
-                        </button>
-                        <button class="random-action-btn random-confirm hidden" id="confirmRandom">
-                            <i data-feather="eye"></i>
-                            Посмотреть
-                        </button>
-                        <button class="random-action-btn random-confirm hidden" id="tryAgain">
-                            <i data-feather="refresh-cw"></i>
-                            Ещё раз
-                        </button>
-                        <button class="random-action-btn location-btn" id="updateLocation">
-                            <i data-feather="navigation"></i>
-                            Обновить местоположение
-                        </button>
+                    <div class="banner-message">
+                        <i data-feather="loader" class="spinning-icon"></i>
+                        <span>Прокручиваем список озёр...</span>
                     </div>
                 </div>
             </div>
         `;
 
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.setupWheelEventListeners(lakes, radius);
+        document.body.insertAdjacentHTML('beforeend', bannerHTML);
+        this.startWheelAnimation(lakes);
         setTimeout(() => feather.replace(), 100);
     }
 
-    // Настройка обработчиков событий для колеса
-    setupWheelEventListeners(lakes, radius) {
-        const modal = document.getElementById('randomModal');
+    // Запуск анимации колеса
+    startWheelAnimation(lakes) {
         const wheel = document.getElementById('lakeWheel');
-        const resultDiv = document.getElementById('randomResult');
-        const selectedLakeInfo = document.getElementById('selectedLakeInfo');
-        const destinyMessage = document.getElementById('destinyMessage');
-
-        // Начинаем анимацию прокрутки
-        this.startWheelAnimation(wheel, lakes, resultDiv, selectedLakeInfo, destinyMessage, radius);
-
-        // Обработчики кнопок
-        document.getElementById('cancelRandom').addEventListener('click', () => {
-            this.closeModal(modal);
-        });
-
-        document.getElementById('confirmRandom').addEventListener('click', () => {
-            const selectedLake = this.getSelectedLake(lakes);
-            this.closeModal(modal);
-            setTimeout(() => {
-                this.app.showDetails(selectedLake);
-            }, 300);
-        });
-
-        document.getElementById('tryAgain').addEventListener('click', () => {
-            this.closeModal(modal);
-            setTimeout(() => {
-                this.startRandomSelection();
-            }, 300);
-        });
-
-        document.getElementById('updateLocation').addEventListener('click', async () => {
-            this.app.showNotification('Обновляем местоположение...');
-            try {
-                await this.app.requestLocationPermission();
-                this.closeModal(modal);
-                setTimeout(() => {
-                    this.startRandomSelection();
-                }, 500);
-            } catch (error) {
-                this.app.showNotification('Не удалось обновить местоположение');
-            }
-        });
-
-        // Закрытие по клику вне модального окна
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                this.closeModal(modal);
-            }
-        });
-    }
-
-    // Анимация прокрутки колеса
-    startWheelAnimation(wheel, lakes, resultDiv, selectedLakeInfo, destinyMessage, radius) {
         const selectedIndex = Math.floor(Math.random() * lakes.length);
         const selectedLake = lakes[selectedIndex];
         
@@ -207,13 +133,9 @@ class RandomWheel {
                     wheel.style.transition = 'transform 1s cubic-bezier(0.23, 1, 0.32, 1)';
                     wheel.style.transform = `translateY(${-(selectedIndex * itemHeight)}px)`;
                     
-                    // Показываем результат
+                    // Закрываем первый баннер и показываем второй
                     setTimeout(() => {
-                        this.showRandomResult(selectedLake, selectedLakeInfo, destinyMessage, radius);
-                        resultDiv.classList.remove('hidden');
-                        document.getElementById('confirmRandom').classList.remove('hidden');
-                        document.getElementById('tryAgain').classList.remove('hidden');
-                        this.isSpinning = false;
+                        this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
                     }, 1000);
                 }
             };
@@ -222,26 +144,23 @@ class RandomWheel {
         }, 100);
     }
 
-    // Получение выбранного озера
-    getSelectedLake(lakes) {
-        const wheel = document.getElementById('lakeWheel');
-        const transform = wheel.style.transform;
-        const match = transform.match(/translateY\(-(\d+)px\)/);
+    // Закрытие первого баннера и показ второго (зеленого)
+    closeFirstBannerAndShowSecond(selectedLake, totalLakes) {
+        const firstBanner = document.getElementById('firstBanner');
         
-        if (match) {
-            const position = parseInt(match[1]);
-            const itemHeight = 80;
-            const selectedIndex = Math.round(position / itemHeight) % lakes.length;
-            return lakes[selectedIndex];
-        }
+        // Анимация закрытия первого баннера
+        firstBanner.style.animation = 'slideOutUp 0.5s ease forwards';
         
-        return lakes[0]; // fallback
+        setTimeout(() => {
+            firstBanner.remove();
+            this.showSecondBanner(selectedLake, totalLakes);
+        }, 500);
     }
 
-    // Показ результата
-    showRandomResult(lake, container, messageElement, radius) {
+    // Показ второго (зеленого) баннера
+    showSecondBanner(selectedLake, totalLakes) {
         const messages = [
-            `Идеальное озеро всего в ${this.app.formatDistance(lake.distance)} от ${this.app.userLocation ? "вас" : "Озёрного"}!`,
+            `Идеальное озеро всего в ${this.app.formatDistance(selectedLake.distance)} от ${this.app.userLocation ? "вас" : "Озёрного"}!`,
             "Судьба привела вас к этому озеру!",
             "Рыбаки хвалят это место за отличный клёв!",
             "Поверьте интуиции - сегодня ваш день!",
@@ -253,35 +172,86 @@ class RandomWheel {
         const randomMessage = messages[Math.floor(Math.random() * messages.length)];
         const locationName = this.app.userLocation ? "вас" : "Озёрного";
 
-        container.innerHTML = `
-            <div class="selected-lake-card">
-                <h3>${lake.name}</h3>
-                <div class="lake-stats">
-                    <span class="stat-item">
-                        <i data-feather="map-pin"></i>
-                        ${this.app.formatDistance(lake.distance)} от ${locationName}
-                    </span>
-                    <span class="stat-item">
-                        <i data-feather="maximize"></i>
-                        ${this.app.formatArea(lake.area)} га
-                    </span>
-                </div>
-                <div class="lake-fish">
-                    <strong>Рыба:</strong> ${lake.fish.slice(0, 4).join(', ')}
+        const bannerHTML = `
+            <div class="result-banner" id="secondBanner">
+                <div class="banner-content">
+                    <div class="banner-success">
+                        <div class="success-icon">🎉</div>
+                        <h3>Судьба выбрала!</h3>
+                    </div>
+                    
+                    <div class="selected-lake-info">
+                        <h4>${selectedLake.name}</h4>
+                        <div class="lake-stats">
+                            <div class="stat">
+                                <i data-feather="map-pin"></i>
+                                <span>${this.app.formatDistance(selectedLake.distance)} от ${locationName}</span>
+                            </div>
+                            <div class="stat">
+                                <i data-feather="maximize"></i>
+                                <span>${this.app.formatArea(selectedLake.area)} га</span>
+                            </div>
+                            <div class="stat">
+                                <i data-feather="trending-down"></i>
+                                <span>${selectedLake.depth}</span>
+                            </div>
+                        </div>
+                        <div class="lake-fish">
+                            <strong>Рыба:</strong> ${selectedLake.fish.slice(0, 4).join(', ')}
+                        </div>
+                    </div>
+                    
+                    <div class="destiny-message">
+                        <i data-feather="star"></i>
+                        <span>${randomMessage}</span>
+                    </div>
+                    
+                    <div class="countdown">
+                        <div class="countdown-text">Открываем детали через: <span id="countdownNumber">5</span> сек.</div>
+                        <div class="countdown-bar">
+                            <div class="countdown-progress" id="countdownProgress"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
 
-        messageElement.textContent = randomMessage;
+        document.body.insertAdjacentHTML('beforeend', bannerHTML);
         setTimeout(() => feather.replace(), 100);
+        
+        // Запускаем обратный отсчет
+        this.startCountdown(selectedLake);
     }
 
-    // Закрытие модального окна
-    closeModal(modal) {
-        modal.style.animation = 'fadeOut 0.3s ease forwards';
+    // Обратный отсчет для второго баннера
+    startCountdown(selectedLake) {
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdownNumber');
+        const progressElement = document.getElementById('countdownProgress');
+        
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            progressElement.style.width = `${(5 - countdown) * 20}%`;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                this.closeSecondBannerAndShowDetails(selectedLake);
+            }
+        }, 1000);
+    }
+
+    // Закрытие второго баннера и открытие карточки озера
+    closeSecondBannerAndShowDetails(selectedLake) {
+        const secondBanner = document.getElementById('secondBanner');
+        
+        // Анимация закрытия второго баннера
+        secondBanner.style.animation = 'slideOutUp 0.5s ease forwards';
+        
         setTimeout(() => {
-            modal.remove();
+            secondBanner.remove();
             this.isSpinning = false;
-        }, 300);
+            this.app.showDetails(selectedLake);
+        }, 500);
     }
 }
