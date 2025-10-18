@@ -57,6 +57,95 @@
     color: #4b5563;
 }
 
+/* Стили для колеса прокрутки */
+.random-wheel-container {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #f9fafb;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wheel-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: #ef4444;
+    z-index: 10;
+    text-shadow: 0 0 3px white;
+    animation: pulse 1s infinite;
+}
+
+.wheel-viewport {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.lake-wheel {
+    transition: transform 0.1s linear;
+}
+
+.wheel-item {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 1rem;
+    text-align: center;
+    background: white;
+}
+
+.wheel-item:last-child {
+    border-bottom: none;
+}
+
+.wheel-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* ИСПРАВЛЕННЫЕ ЦВЕТА ТЕКСТА */
+.wheel-item strong {
+    font-size: 1rem;
+    color: #1f2937; /* Темно-серый вместо белого */
+    font-weight: 600;
+}
+
+.wheel-item small {
+    font-size: 0.8rem;
+    color: #4b5563; /* Серый вместо светло-серого */
+}
+
+/* Стили для выделенного элемента (под стрелкой) */
+.wheel-item.highlighted {
+    background: #3b82f6 !important; /* Синий фон для выделенного */
+}
+
+.wheel-item.highlighted strong {
+    color: white !important; /* Белый текст на синем фоне */
+}
+
+.wheel-item.highlighted small {
+    color: #e5e7eb !important; /* Светло-серый текст на синем фоне */
+}
+
+/* Альтернативные цвета для четных/нечетных элементов */
+.wheel-item:nth-child(even) {
+    background: #f8fafc; /* Очень светлый серый */
+}
+
+.wheel-item:nth-child(odd) {
+    background: white; /* Белый */
+}
+
 /* Стили для второго баннера (результат) */
 .result-banner {
     position: fixed;
@@ -178,66 +267,6 @@
     border-radius: 3px;
 }
 
-/* Общие стили для колеса прокрутки */
-.random-wheel-container {
-    position: relative;
-    height: 240px;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.75rem;
-    background: #f9fafb;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.wheel-arrow {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.5rem;
-    color: #ef4444;
-    z-index: 10;
-    text-shadow: 0 0 3px white;
-    animation: pulse 1s infinite;
-}
-
-.lake-wheel {
-    transition: transform 0.1s linear;
-}
-
-.wheel-item {
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0 1rem;
-    text-align: center;
-    background: white;
-}
-
-.wheel-item:last-child {
-    border-bottom: none;
-}
-
-.wheel-item-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.wheel-item strong {
-    font-size: 1rem;
-    color: #1f2937;
-    font-weight: 600;
-}
-
-.wheel-item small {
-    font-size: 0.8rem;
-    color: #6b7280;
-}
-
 .banner-message {
     display: flex;
     align-items: center;
@@ -253,133 +282,6 @@
 
 .spinning-icon {
     animation: spin 1s linear infinite;
-}
-
-/* Стили для модального окна (старая версия - на всякий случай) */
-.random-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-    animation: fadeIn 0.3s ease;
-}
-
-.random-modal-content {
-    background: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 400px;
-    max-height: 90vh;
-    overflow-y: auto;
-    animation: slideUp 0.3s ease;
-}
-
-.random-header {
-    text-align: center;
-    margin-bottom: 1rem;
-}
-
-.random-header h3 {
-    margin: 0 0 0.5rem 0;
-    color: #1f2937;
-    font-size: 1.25rem;
-}
-
-.random-header p {
-    margin: 0;
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.random-result {
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
-    border-radius: 0.75rem;
-    animation: slideDown 0.3s ease;
-}
-
-.result-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.result-header h4 {
-    margin: 0;
-    color: #065f46;
-}
-
-.result-icon {
-    color: #059669;
-}
-
-.selected-lake-card {
-    text-align: center;
-}
-
-.selected-lake-card h3 {
-    margin: 0 0 0.75rem 0;
-    color: #1f2937;
-    font-size: 1.25rem;
-}
-
-.random-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.random-action-btn {
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    transition: all 0.2s ease;
-}
-
-.random-cancel {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-.random-cancel:hover {
-    background: #e5e7eb;
-}
-
-.random-confirm {
-    background: #10b981;
-    color: white;
-}
-
-.random-confirm:hover {
-    background: #059669;
-}
-
-.location-btn {
-    background: #3b82f6;
-    color: white;
-}
-
-.location-btn:hover {
-    background: #2563eb;
 }
 
 /* Анимации */
@@ -482,11 +384,6 @@
         padding: 2.5rem;
     }
     
-    .random-modal-content {
-        max-width: 500px;
-        padding: 2rem;
-    }
-    
     .random-wheel-container {
         height: 300px;
     }
@@ -545,15 +442,13 @@
 /* Поддержка темной темы */
 @media (prefers-color-scheme: dark) {
     .random-banner .banner-content,
-    .result-banner .banner-content,
-    .random-modal-content {
+    .result-banner .banner-content {
         background: #1f2937;
         color: #f9fafb;
     }
     
     .banner-header h3,
-    .selected-lake-info h4,
-    .selected-lake-card h3 {
+    .selected-lake-info h4 {
         color: #f9fafb;
     }
     
@@ -576,6 +471,14 @@
         border-color: #4b5563;
     }
     
+    .wheel-item:nth-child(even) {
+        background: #374151;
+    }
+    
+    .wheel-item:nth-child(odd) {
+        background: #1f2937;
+    }
+    
     .wheel-item strong {
         color: #f9fafb;
     }
@@ -584,17 +487,12 @@
         color: #d1d5db;
     }
     
+    .wheel-item.highlighted {
+        background: #3b82f6 !important;
+    }
+    
     .banner-message {
         background: #374151;
         color: #d1d5db;
     }
-}
-.wheel-viewport {
-    height: 240px;
-    overflow: hidden;
-    position: relative;
-}
-
-.lake-wheel {
-    transition: transform 0.1s linear;
 }
