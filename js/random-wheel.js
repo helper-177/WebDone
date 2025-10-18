@@ -89,59 +89,67 @@ class RandomWheel {
         `;
 
         document.body.insertAdjacentHTML('beforeend', bannerHTML);
-        this.startWheelAnimation(lakes);
+        
+        // Сразу показываем список озер и начинаем анимацию
+        setTimeout(() => {
+            this.startWheelAnimation(lakes);
+        }, 100);
+        
         setTimeout(() => feather.replace(), 100);
     }
 
-    // Запуск анимации колеса
+    // Запуск анимации колеса с плавным ускорением и замедлением
     startWheelAnimation(lakes) {
         const wheel = document.getElementById('lakeWheel');
         const selectedIndex = Math.floor(Math.random() * lakes.length);
         const selectedLake = lakes[selectedIndex];
+        const itemHeight = 80;
+        const totalHeight = lakes.length * itemHeight;
         
-        // Начальная позиция
+        // Начальная позиция - сразу показываем список
         wheel.style.transition = 'none';
         wheel.style.transform = 'translateY(0)';
         
-        // Даем время на отрисовку
-        setTimeout(() => {
-            // Быстрая прокрутка в начале
-            wheel.style.transition = 'transform 0.1s linear';
+        // Функция для easing - плавное ускорение и замедление
+        const easeInOutCubic = (t) => {
+            return t < 0.5 
+                ? 4 * t * t * t 
+                : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        };
+
+        const startTime = Date.now();
+        const totalDuration = 7000; // 7 секунд общее время
+        const maxSpins = 8; // Количество полных прокруток
+        
+        const animate = () => {
+            const currentTime = Date.now();
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / totalDuration, 1);
             
-            let spinCount = 0;
-            const maxSpins = 15; // Увеличил количество прокруток
-            const spinDuration = 7000; // 7 секунд прокрутки
+            // Используем easing функцию для плавного ускорения и замедления
+            const easedProgress = easeInOutCubic(progress);
             
-            const startSpin = () => {
-                const itemHeight = 80; // Высота элемента колеса
-                const totalHeight = lakes.length * itemHeight;
-                
-                // Плавное замедление
-                const progress = Math.min(spinCount / (spinDuration / 100), 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                
-                // Вычисляем позицию с учетом замедления
-                const currentPosition = -easeOut * (maxSpins * totalHeight + selectedIndex * itemHeight);
+            if (progress < 1) {
+                // Активная фаза прокрутки
+                const distance = easedProgress * maxSpins * totalHeight;
+                const currentPosition = -distance;
                 wheel.style.transform = `translateY(${currentPosition}px)`;
+                requestAnimationFrame(animate);
+            } else {
+                // Финальная фаза - плавная остановка на выбранном озере
+                const finalPosition = -(selectedIndex * itemHeight + maxSpins * totalHeight);
+                wheel.style.transition = 'transform 2s cubic-bezier(0.23, 1, 0.32, 1)';
+                wheel.style.transform = `translateY(${finalPosition}px)`;
                 
-                spinCount++;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(startSpin);
-                } else {
-                    // Финальная корректировка позиции
-                    wheel.style.transition = 'transform 2s cubic-bezier(0.23, 1, 0.32, 1)';
-                    wheel.style.transform = `translateY(${-(selectedIndex * itemHeight)}px)`;
-                    
-                    // Закрываем первый баннер и показываем второй
-                    setTimeout(() => {
-                        this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
-                    }, 2000);
-                }
-            };
-            
-            startSpin();
-        }, 100);
+                // Закрываем первый баннер и показываем второй
+                setTimeout(() => {
+                    this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
+                }, 2000);
+            }
+        };
+
+        // Запускаем анимацию
+        requestAnimationFrame(animate);
     }
 
     // Закрытие первого баннера и показ второго (зеленого)
