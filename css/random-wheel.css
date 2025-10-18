@@ -589,3 +589,12 @@
         color: #d1d5db;
     }
 }
+.wheel-viewport {
+    height: 240px;
+    overflow: hidden;
+    position: relative;
+}
+
+.lake-wheel {
+    transition: transform 0.1s linear;
+}
