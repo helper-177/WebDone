@@ -53,19 +53,6 @@ class RandomWheel {
         this.isSpinning = true;
         const locationName = this.app.userLocation ? "вашего местоположения" : "Озёрного";
         
-        // Создаем бесконечный список для плавной прокрутки
-        const wheelItems = [];
-        for (let i = 0; i < 3; i++) { // 3 копии для бесконечной прокрутки
-            wheelItems.push(...lakes.map((lake, index) => `
-                <div class="wheel-item" data-index="${index}">
-                    <div class="wheel-item-content">
-                        <strong>${lake.name}</strong>
-                        <small>${this.app.formatDistance(lake.distance)} • ${this.app.formatArea(lake.area)} га</small>
-                    </div>
-                </div>
-            `));
-        }
-
         const bannerHTML = `
             <div class="random-banner" id="firstBanner">
                 <div class="banner-content">
@@ -81,8 +68,17 @@ class RandomWheel {
                     
                     <div class="random-wheel-container">
                         <div class="wheel-arrow">▼</div>
-                        <div class="lake-wheel" id="lakeWheel">
-                            ${wheelItems.join('')}
+                        <div class="wheel-viewport">
+                            <div class="lake-wheel" id="lakeWheel">
+                                ${lakes.map((lake, index) => `
+                                    <div class="wheel-item" data-index="${index}">
+                                        <div class="wheel-item-content">
+                                            <strong>${lake.name}</strong>
+                                            <small>${this.app.formatDistance(lake.distance)} • ${this.app.formatArea(lake.area)} га</small>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
                     </div>
                     
@@ -110,16 +106,18 @@ class RandomWheel {
         const selectedIndex = Math.floor(Math.random() * lakes.length);
         const selectedLake = lakes[selectedIndex];
         const itemHeight = 80;
-        const totalItems = lakes.length * 3; // 3 копии списка
+        const totalHeight = lakes.length * itemHeight;
         
-        // Начальная позиция - показываем середину первой копии
-        const startPosition = lakes.length * itemHeight;
+        // Начальная позиция - показываем первые элементы
         wheel.style.transition = 'none';
-        wheel.style.transform = `translateY(-${startPosition}px)`;
+        wheel.style.transform = 'translateY(0)';
+        
+        // Создаем виртуальную бесконечную прокрутку
+        let virtualPosition = 0;
+        const maxVirtualPosition = 10000; // Большое число для виртуальной прокрутки
         
         const startTime = Date.now();
         const totalDuration = 7000; // 7 секунд общее время
-        const maxSpins = 8; // Количество полных прокруток
         
         const animate = () => {
             const currentTime = Date.now();
@@ -130,34 +128,38 @@ class RandomWheel {
             let easedProgress;
             if (progress < 0.3) {
                 // Медленный старт (первые 30%)
-                easedProgress = progress * progress * 0.5;
+                easedProgress = progress * progress;
             } else if (progress < 0.7) {
                 // Быстрая прокрутка (30%-70%)
-                easedProgress = 0.045 + (progress - 0.3) * 1.5;
+                easedProgress = 0.09 + (progress - 0.3) * 1.5;
             } else {
                 // Медленное завершение (последние 30%)
-                easedProgress = 0.645 + (progress - 0.7) * 0.3;
+                easedProgress = 0.69 + (progress - 0.7) * 0.3;
             }
 
             easedProgress = Math.min(easedProgress, 1);
             
             if (progress < 1) {
                 // Активная фаза прокрутки
-                const distance = easedProgress * maxSpins * lakes.length * itemHeight;
-                const currentPosition = startPosition + distance;
-                wheel.style.transform = `translateY(-${currentPosition}px)`;
+                virtualPosition = easedProgress * maxVirtualPosition;
+                
+                // Вычисляем видимую позицию с учетом циклической прокрутки
+                const visiblePosition = virtualPosition % totalHeight;
+                wheel.style.transform = `translateY(-${visiblePosition}px)`;
                 requestAnimationFrame(animate);
             } else {
                 // Финальная фаза - плавная остановка на выбранном озере
-                // Вычисляем финальную позицию в средней копии
-                const finalPosition = startPosition + (maxSpins * lakes.length * itemHeight) - (selectedIndex * itemHeight);
-                wheel.style.transition = 'transform 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
-                wheel.style.transform = `translateY(-${finalPosition}px)`;
+                // Вычисляем финальную позицию для выбранного озера
+                const finalVirtualPosition = Math.floor(virtualPosition / totalHeight) * totalHeight + (selectedIndex * itemHeight);
+                const finalVisiblePosition = finalVirtualPosition % totalHeight;
+                
+                wheel.style.transition = 'transform 2s cubic-bezier(0.23, 1, 0.32, 1)';
+                wheel.style.transform = `translateY(-${finalVisiblePosition}px)`;
                 
                 // Закрываем первый баннер и показываем второй
                 setTimeout(() => {
                     this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
-                }, 1500);
+                }, 2000);
             }
         };
 
