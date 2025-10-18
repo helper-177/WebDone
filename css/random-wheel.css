@@ -1,0 +1,223 @@
+/* random-wheel.css - Стили для случайного выбора озера */
+
+/* Стили для модального окна колеса */
+.random-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+}
+
+.random-modal-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.random-modal-content h3 {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+}
+
+.random-modal-content p {
+    margin: 0 0 2rem 0;
+    color: #6b7280;
+}
+
+/* Стили для колеса */
+.random-wheel {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+    border: 3px solid #2563eb;
+    margin: 2rem 0;
+}
+
+.wheel-items {
+    transition: transform 0.1s linear;
+}
+
+.wheel-item {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    color: #374151;
+    border-bottom: 1px solid #dbeafe;
+    padding: 0 1rem;
+}
+
+.wheel-item:nth-child(odd) {
+    background: #f8faff;
+}
+
+.wheel-item:nth-child(even) {
+    background: #f0f4ff;
+}
+
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    background: #ef4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    z-index: 10;
+}
+
+.wheel-center::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -100px;
+    right: -100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ef4444, transparent);
+    transform: translateY(-50%);
+}
+
+/* Стили для зеленого баннера */
+.result-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(16, 185, 129, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    padding: 1rem;
+    animation: bannerAppear 0.5s ease-out;
+}
+
+.banner-content {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: scaleIn 0.5s ease-out;
+}
+
+.banner-content h3 {
+    margin: 0 0 1.5rem 0;
+    color: #059669;
+    font-size: 1.8rem;
+}
+
+.lake-info h4 {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 1.4rem;
+}
+
+.lake-info p {
+    margin: 0.5rem 0;
+    color: #4b5563;
+    font-size: 1.1rem;
+}
+
+.banner-message {
+    margin: 1.5rem 0 0 0;
+    color: #059669;
+    font-style: italic;
+    font-size: 1.1rem;
+}
+
+/* Анимации */
+@keyframes bannerAppear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes wheelSpin {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* Убираем скроллы */
+.random-modal,
+.result-banner {
+    overflow: hidden;
+}
+
+.random-wheel {
+    overflow: hidden;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 480px) {
+    .random-modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .random-wheel {
+        height: 250px;
+    }
+    
+    .wheel-item {
+        height: 50px;
+        font-size: 14px;
+    }
+    
+    .banner-content {
+        padding: 2rem;
+        margin: 1rem;
+    }
+    
+    .banner-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .lake-info h4 {
+        font-size: 1.2rem;
+    }
+}
