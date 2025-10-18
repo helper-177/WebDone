@@ -1,4 +1,261 @@
-/* Стили для случайного выбора */
+/* random-wheel.css - Стили для модуля случайного выбора озера */
+
+/* Стили для первого баннера (колесо прокрутки) */
+.random-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: slideInDown 0.5s ease;
+}
+
+.random-banner .banner-content {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.banner-header {
+    margin-bottom: 1.5rem;
+}
+
+.banner-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.banner-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f3f4f6;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+/* Стили для второго баннера (результат) */
+.result-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+    animation: slideInDown 0.5s ease;
+}
+
+.result-banner .banner-content {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.banner-success {
+    margin-bottom: 1.5rem;
+}
+
+.success-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    animation: bounce 0.5s ease;
+}
+
+.banner-success h3 {
+    margin: 0;
+    color: #065f46;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.selected-lake-info {
+    margin-bottom: 1.5rem;
+}
+
+.selected-lake-info h4 {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.lake-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.lake-fish {
+    background: #ecfdf5;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    color: #065f46;
+    margin-bottom: 1rem;
+    border: 1px solid #a7f3d0;
+}
+
+.destiny-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    color: #065f46;
+    line-height: 1.4;
+}
+
+.countdown {
+    margin-top: 1rem;
+}
+
+.countdown-text {
+    font-size: 0.9rem;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.countdown-bar {
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.countdown-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    width: 0%;
+    transition: width 1s linear;
+    border-radius: 3px;
+}
+
+/* Общие стили для колеса прокрутки */
+.random-wheel-container {
+    position: relative;
+    height: 240px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #f9fafb;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wheel-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: #ef4444;
+    z-index: 10;
+    text-shadow: 0 0 3px white;
+    animation: pulse 1s infinite;
+}
+
+.lake-wheel {
+    transition: transform 0.1s linear;
+}
+
+.wheel-item {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0 1rem;
+    text-align: center;
+    background: white;
+}
+
+.wheel-item:last-child {
+    border-bottom: none;
+}
+
+.wheel-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.wheel-item strong {
+    font-size: 1rem;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.wheel-item small {
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+.banner-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    background: #f3f4f6;
+    border-radius: 0.75rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.spinning-icon {
+    animation: spin 1s linear infinite;
+}
+
+/* Стили для модального окна (старая версия - на всякий случай) */
 .random-modal {
     position: fixed;
     top: 0;
@@ -42,70 +299,6 @@
     font-size: 0.9rem;
 }
 
-.location-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: #f3f4f6;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
-    font-size: 0.9rem;
-    color: #4b5563;
-}
-
-.random-wheel-container {
-    position: relative;
-    height: 240px;
-    overflow: hidden;
-    margin: 1.5rem 0;
-    border: 2px solid #e5e7eb;
-    border-radius: 0.75rem;
-    background: #f9fafb;
-}
-
-.wheel-arrow {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.5rem;
-    color: #ef4444;
-    z-index: 10;
-    text-shadow: 0 0 3px white;
-}
-
-.lake-wheel {
-    transition: transform 0.1s linear;
-}
-
-.wheel-item {
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #e5e7eb;
-    padding: 0 1rem;
-    text-align: center;
-}
-
-.wheel-item-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.wheel-item strong {
-    font-size: 1rem;
-    color: #1f2937;
-}
-
-.wheel-item small {
-    font-size: 0.8rem;
-    color: #6b7280;
-}
-
 .random-result {
     margin: 1.5rem 0;
     padding: 1rem;
@@ -140,36 +333,6 @@
     margin: 0 0 0.75rem 0;
     color: #1f2937;
     font-size: 1.25rem;
-}
-
-.lake-stats {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    flex-wrap: wrap;
-}
-
-.stat-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.85rem;
-    color: #4b5563;
-}
-
-.lake-fish {
-    font-size: 0.9rem;
-    color: #374151;
-}
-
-.destiny-message {
-    text-align: center;
-    font-style: italic;
-    color: #059669;
-    margin: 1rem 0 0 0;
-    padding-top: 1rem;
-    border-top: 1px solid #a7f3d0;
 }
 
 .random-actions {
@@ -220,6 +383,28 @@
 }
 
 /* Анимации */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+}
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -252,12 +437,51 @@
     }
 }
 
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        transform: translate3d(0, 0, 0);
+    }
+    40%, 43% {
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.1);
+    }
+    100% {
+        transform: translateX(-50%) scale(1);
+    }
+}
+
+/* Утилиты */
 .hidden {
     display: none !important;
 }
 
 /* Адаптивность для планшетов */
 @media (min-width: 768px) and (max-width: 1024px) {
+    .random-banner .banner-content,
+    .result-banner .banner-content {
+        max-width: 500px;
+        padding: 2.5rem;
+    }
+    
     .random-modal-content {
         max-width: 500px;
         padding: 2rem;
@@ -277,5 +501,91 @@
     
     .wheel-item small {
         font-size: 0.9rem;
+    }
+    
+    .banner-header h3,
+    .banner-success h3 {
+        font-size: 1.75rem;
+    }
+    
+    .selected-lake-info h4 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Адаптивность для очень маленьких экранов */
+@media (max-width: 360px) {
+    .random-banner .banner-content,
+    .result-banner .banner-content {
+        padding: 1.5rem;
+    }
+    
+    .banner-header h3,
+    .banner-success h3 {
+        font-size: 1.3rem;
+    }
+    
+    .random-wheel-container {
+        height: 200px;
+    }
+    
+    .wheel-item {
+        height: 70px;
+    }
+    
+    .wheel-item strong {
+        font-size: 0.9rem;
+    }
+    
+    .wheel-item small {
+        font-size: 0.75rem;
+    }
+}
+
+/* Поддержка темной темы */
+@media (prefers-color-scheme: dark) {
+    .random-banner .banner-content,
+    .result-banner .banner-content,
+    .random-modal-content {
+        background: #1f2937;
+        color: #f9fafb;
+    }
+    
+    .banner-header h3,
+    .selected-lake-info h4,
+    .selected-lake-card h3 {
+        color: #f9fafb;
+    }
+    
+    .banner-header p,
+    .location-info {
+        color: #d1d5db;
+    }
+    
+    .location-info {
+        background: #374151;
+    }
+    
+    .random-wheel-container {
+        background: #374151;
+        border-color: #4b5563;
+    }
+    
+    .wheel-item {
+        background: #1f2937;
+        border-color: #4b5563;
+    }
+    
+    .wheel-item strong {
+        color: #f9fafb;
+    }
+    
+    .wheel-item small {
+        color: #d1d5db;
+    }
+    
+    .banner-message {
+        background: #374151;
+        color: #d1d5db;
     }
 }
