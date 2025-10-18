@@ -1,223 +1,281 @@
-/* random-wheel.css - Стили для случайного выбора озера */
-
-/* Стили для модального окна колеса */
+/* Стили для случайного выбора */
 .random-modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    z-index: 1000;
     padding: 1rem;
+    animation: fadeIn 0.3s ease;
 }
 
 .random-modal-content {
     background: white;
-    border-radius: 20px;
-    padding: 2rem;
+    border-radius: 1rem;
+    padding: 1.5rem;
     width: 100%;
-    max-width: 350px;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+.random-header {
     text-align: center;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    margin-bottom: 1rem;
 }
 
-.random-modal-content h3 {
-    margin: 0 0 1rem 0;
+.random-header h3 {
+    margin: 0 0 0.5rem 0;
     color: #1f2937;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
 }
 
-.random-modal-content p {
-    margin: 0 0 2rem 0;
+.random-header p {
+    margin: 0;
     color: #6b7280;
+    font-size: 0.9rem;
 }
 
-/* Стили для колеса */
-.random-wheel {
+.location-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #f3f4f6;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+
+.random-wheel-container {
     position: relative;
-    height: 300px;
+    height: 240px;
     overflow: hidden;
-    border-radius: 15px;
-    background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
-    border: 3px solid #2563eb;
-    margin: 2rem 0;
+    margin: 1.5rem 0;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #f9fafb;
 }
 
-.wheel-items {
+.wheel-arrow {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    color: #ef4444;
+    z-index: 10;
+    text-shadow: 0 0 3px white;
+}
+
+.lake-wheel {
     transition: transform 0.1s linear;
 }
 
 .wheel-item {
-    height: 60px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
-    color: #374151;
-    border-bottom: 1px solid #dbeafe;
+    border-bottom: 1px solid #e5e7eb;
     padding: 0 1rem;
-}
-
-.wheel-item:nth-child(odd) {
-    background: #f8faff;
-}
-
-.wheel-item:nth-child(even) {
-    background: #f0f4ff;
-}
-
-.wheel-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: #ef4444;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: white;
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-    z-index: 10;
-}
-
-.wheel-center::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: -100px;
-    right: -100px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #ef4444, transparent);
-    transform: translateY(-50%);
-}
-
-/* Стили для зеленого баннера */
-.result-banner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(16, 185, 129, 0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    padding: 1rem;
-    animation: bannerAppear 0.5s ease-out;
-}
-
-.banner-content {
-    background: white;
-    border-radius: 20px;
-    padding: 2.5rem;
     text-align: center;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    animation: scaleIn 0.5s ease-out;
 }
 
-.banner-content h3 {
-    margin: 0 0 1.5rem 0;
-    color: #059669;
-    font-size: 1.8rem;
+.wheel-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.lake-info h4 {
-    margin: 0 0 1rem 0;
+.wheel-item strong {
+    font-size: 1rem;
     color: #1f2937;
-    font-size: 1.4rem;
 }
 
-.lake-info p {
-    margin: 0.5rem 0;
-    color: #4b5563;
-    font-size: 1.1rem;
+.wheel-item small {
+    font-size: 0.8rem;
+    color: #6b7280;
 }
 
-.banner-message {
-    margin: 1.5rem 0 0 0;
+.random-result {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 0.75rem;
+    animation: slideDown 0.3s ease;
+}
+
+.result-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.result-header h4 {
+    margin: 0;
+    color: #065f46;
+}
+
+.result-icon {
     color: #059669;
+}
+
+.selected-lake-card {
+    text-align: center;
+}
+
+.selected-lake-card h3 {
+    margin: 0 0 0.75rem 0;
+    color: #1f2937;
+    font-size: 1.25rem;
+}
+
+.lake-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+.lake-fish {
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.destiny-message {
+    text-align: center;
     font-style: italic;
-    font-size: 1.1rem;
+    color: #059669;
+    margin: 1rem 0 0 0;
+    padding-top: 1rem;
+    border-top: 1px solid #a7f3d0;
+}
+
+.random-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.random-action-btn {
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.random-cancel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.random-cancel:hover {
+    background: #e5e7eb;
+}
+
+.random-confirm {
+    background: #10b981;
+    color: white;
+}
+
+.random-confirm:hover {
+    background: #059669;
+}
+
+.location-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.location-btn:hover {
+    background: #2563eb;
 }
 
 /* Анимации */
-@keyframes bannerAppear {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-@keyframes scaleIn {
-    from {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
-@keyframes wheelSpin {
-    0% {
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
         transform: translateY(0);
     }
-    100% {
-        transform: translateY(-100%);
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-/* Убираем скроллы */
-.random-modal,
-.result-banner {
-    overflow: hidden;
+.hidden {
+    display: none !important;
 }
 
-.random-wheel {
-    overflow: hidden;
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 480px) {
+/* Адаптивность для планшетов */
+@media (min-width: 768px) and (max-width: 1024px) {
     .random-modal-content {
-        padding: 1.5rem;
-        margin: 1rem;
+        max-width: 500px;
+        padding: 2rem;
     }
     
-    .random-wheel {
-        height: 250px;
+    .random-wheel-container {
+        height: 300px;
     }
     
     .wheel-item {
-        height: 50px;
-        font-size: 14px;
+        height: 100px;
     }
     
-    .banner-content {
-        padding: 2rem;
-        margin: 1rem;
+    .wheel-item strong {
+        font-size: 1.1rem;
     }
     
-    .banner-content h3 {
-        font-size: 1.5rem;
-    }
-    
-    .lake-info h4 {
-        font-size: 1.2rem;
+    .wheel-item small {
+        font-size: 0.9rem;
     }
 }
