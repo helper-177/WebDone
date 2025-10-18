@@ -109,8 +109,8 @@ class RandomWheel {
             wheel.style.transition = 'transform 0.1s linear';
             
             let spinCount = 0;
-            const maxSpins = 8; // Количество полных прокруток
-            const spinDuration = 3000; // Общее время анимации
+            const maxSpins = 15; // Увеличил количество прокруток
+            const spinDuration = 7000; // 7 секунд прокрутки
             
             const startSpin = () => {
                 const itemHeight = 80; // Высота элемента колеса
@@ -130,13 +130,13 @@ class RandomWheel {
                     requestAnimationFrame(startSpin);
                 } else {
                     // Финальная корректировка позиции
-                    wheel.style.transition = 'transform 1s cubic-bezier(0.23, 1, 0.32, 1)';
+                    wheel.style.transition = 'transform 2s cubic-bezier(0.23, 1, 0.32, 1)';
                     wheel.style.transform = `translateY(${-(selectedIndex * itemHeight)}px)`;
                     
                     // Закрываем первый баннер и показываем второй
                     setTimeout(() => {
                         this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
-                    }, 1000);
+                    }, 2000);
                 }
             };
             
@@ -149,12 +149,12 @@ class RandomWheel {
         const firstBanner = document.getElementById('firstBanner');
         
         // Анимация закрытия первого баннера
-        firstBanner.style.animation = 'slideOutUp 0.5s ease forwards';
+        firstBanner.style.animation = 'slideOutUp 1s ease forwards';
         
         setTimeout(() => {
             firstBanner.remove();
             this.showSecondBanner(selectedLake, totalLakes);
-        }, 500);
+        }, 1000);
     }
 
     // Показ второго (зеленого) баннера
@@ -207,7 +207,7 @@ class RandomWheel {
                     </div>
                     
                     <div class="countdown">
-                        <div class="countdown-text">Открываем детали через: <span id="countdownNumber">5</span> сек.</div>
+                        <div class="countdown-text">Открываем детали через: <span id="countdownNumber">7</span> сек.</div>
                         <div class="countdown-bar">
                             <div class="countdown-progress" id="countdownProgress"></div>
                         </div>
@@ -225,14 +225,14 @@ class RandomWheel {
 
     // Обратный отсчет для второго баннера
     startCountdown(selectedLake) {
-        let countdown = 5;
+        let countdown = 7; // 7 секунд обратного отсчета
         const countdownElement = document.getElementById('countdownNumber');
         const progressElement = document.getElementById('countdownProgress');
         
         const countdownInterval = setInterval(() => {
             countdown--;
             countdownElement.textContent = countdown;
-            progressElement.style.width = `${(5 - countdown) * 20}%`;
+            progressElement.style.width = `${(7 - countdown) * (100/7)}%`;
             
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
