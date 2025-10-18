@@ -77,6 +77,15 @@ class RandomWheel {
                                     </div>
                                 </div>
                             `).join('')}
+                            <!-- Дублируем элементы для бесшовной прокрутки -->
+                            ${lakes.map((lake, index) => `
+                                <div class="wheel-item" data-index="${index}">
+                                    <div class="wheel-item-content">
+                                        <strong>${lake.name}</strong>
+                                        <small>${this.app.formatDistance(lake.distance)} • ${this.app.formatArea(lake.area)} га</small>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                     
@@ -90,10 +99,10 @@ class RandomWheel {
 
         document.body.insertAdjacentHTML('beforeend', bannerHTML);
         
-        // Сразу показываем список озер и начинаем анимацию
+        // Даем время на отрисовку и начинаем анимацию
         setTimeout(() => {
             this.startWheelAnimation(lakes);
-        }, 100);
+        }, 300);
         
         setTimeout(() => feather.replace(), 100);
     }
@@ -104,13 +113,14 @@ class RandomWheel {
         const selectedIndex = Math.floor(Math.random() * lakes.length);
         const selectedLake = lakes[selectedIndex];
         const itemHeight = 80;
-        const totalHeight = lakes.length * itemHeight;
+        const visibleItems = 3; // Количество видимых элементов
+        const totalItems = lakes.length * 2; // Удвоенное количество для бесшовной прокрутки
         
-        // Начальная позиция - сразу показываем список
+        // Начальная позиция - показываем первые элементы
         wheel.style.transition = 'none';
         wheel.style.transform = 'translateY(0)';
         
-        // Функция для easing - плавное ускорение и замедление
+        // Функции для easing
         const easeInOutCubic = (t) => {
             return t < 0.5 
                 ? 4 * t * t * t 
@@ -119,7 +129,7 @@ class RandomWheel {
 
         const startTime = Date.now();
         const totalDuration = 7000; // 7 секунд общее время
-        const maxSpins = 8; // Количество полных прокруток
+        const maxSpins = 5; // Количество полных прокруток
         
         const animate = () => {
             const currentTime = Date.now();
@@ -127,24 +137,37 @@ class RandomWheel {
             const progress = Math.min(elapsed / totalDuration, 1);
             
             // Используем easing функцию для плавного ускорения и замедления
-            const easedProgress = easeInOutCubic(progress);
+            let easedProgress;
+            if (progress < 0.3) {
+                // Медленный старт (первые 30%)
+                easedProgress = progress * progress;
+            } else if (progress < 0.7) {
+                // Быстрая прокрутка (30%-70%)
+                easedProgress = 0.09 + (progress - 0.3) * 1.5;
+            } else {
+                // Медленное завершение (последние 30%)
+                easedProgress = 0.69 + (progress - 0.7) * 0.3;
+            }
+
+            easedProgress = Math.min(easedProgress, 1);
             
             if (progress < 1) {
                 // Активная фаза прокрутки
-                const distance = easedProgress * maxSpins * totalHeight;
+                const distance = easedProgress * maxSpins * lakes.length * itemHeight;
                 const currentPosition = -distance;
                 wheel.style.transform = `translateY(${currentPosition}px)`;
                 requestAnimationFrame(animate);
             } else {
                 // Финальная фаза - плавная остановка на выбранном озере
-                const finalPosition = -(selectedIndex * itemHeight + maxSpins * totalHeight);
-                wheel.style.transition = 'transform 2s cubic-bezier(0.23, 1, 0.32, 1)';
+                // Вычисляем финальную позицию с учетом дублирования элементов
+                const finalPosition = -(selectedIndex * itemHeight);
+                wheel.style.transition = 'transform 1.5s cubic-bezier(0.23, 1, 0.32, 1)';
                 wheel.style.transform = `translateY(${finalPosition}px)`;
                 
                 // Закрываем первый баннер и показываем второй
                 setTimeout(() => {
                     this.closeFirstBannerAndShowSecond(selectedLake, lakes.length);
-                }, 2000);
+                }, 1500);
             }
         };
 
@@ -157,12 +180,12 @@ class RandomWheel {
         const firstBanner = document.getElementById('firstBanner');
         
         // Анимация закрытия первого баннера
-        firstBanner.style.animation = 'slideOutUp 1s ease forwards';
+        firstBanner.style.animation = 'slideOutUp 0.8s ease forwards';
         
         setTimeout(() => {
             firstBanner.remove();
             this.showSecondBanner(selectedLake, totalLakes);
-        }, 1000);
+        }, 800);
     }
 
     // Показ второго (зеленого) баннера
@@ -215,7 +238,7 @@ class RandomWheel {
                     </div>
                     
                     <div class="countdown">
-                        <div class="countdown-text">Открываем детали через: <span id="countdownNumber">7</span> сек.</div>
+                        <div class="countdown-text">Открываем детали через: <span id="countdownNumber">5</span> сек.</div>
                         <div class="countdown-bar">
                             <div class="countdown-progress" id="countdownProgress"></div>
                         </div>
@@ -233,14 +256,14 @@ class RandomWheel {
 
     // Обратный отсчет для второго баннера
     startCountdown(selectedLake) {
-        let countdown = 7; // 7 секунд обратного отсчета
+        let countdown = 5; // 5 секунд обратного отсчета
         const countdownElement = document.getElementById('countdownNumber');
         const progressElement = document.getElementById('countdownProgress');
         
         const countdownInterval = setInterval(() => {
             countdown--;
             countdownElement.textContent = countdown;
-            progressElement.style.width = `${(7 - countdown) * (100/7)}%`;
+            progressElement.style.width = `${(5 - countdown) * 20}%`;
             
             if (countdown <= 0) {
                 clearInterval(countdownInterval);
