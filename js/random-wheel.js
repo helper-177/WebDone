@@ -26,9 +26,9 @@ class RandomWheel {
         let searchRadius = 40; // км по умолчанию
         
         if (this.app.userLocation && this.app.userLocation.accuracy < 1000) {
-            searchRadius = 200;
+            searchRadius = 20;
         } else if (this.app.userLocation) {
-            searchRadius = 250;
+            searchRadius = 35;
         }
 
         const nearbyLakes = this.app.lakesData.filter(lake => lake.distance <= searchRadius);
